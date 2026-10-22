@@ -35,6 +35,16 @@ python scripts/evaluate.py --data-dir data --limit 200                        # 
 python scripts/evaluate.py --save report.json                                 # full 30% test split with masks
 ```
 
+## Visual gallery
+
+`notebooks/gradcam_gallery.ipynb` samples random HAM10000 images and renders, inline in the notebook, a table of originals next to their Grad-CAM overlays (plus a saved PNG under `outputs/`). Parameters (count, seed, target class, overlay alpha) sit in their own cell.
+
+`scripts/gradcam_gallery.py` does the same job end to end and opens the PNG automatically:
+
+```bash
+python scripts/gradcam_gallery.py --data-dir data --count 10 --seed 7
+```
+
 The script expects the HAM10000 layout produced by the upstream download:
 
 ```
