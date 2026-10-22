@@ -78,7 +78,8 @@ def main() -> None:
     for _, row in frame.iterrows():
         image = Image.open(mapping[row.image_id]).convert("RGB")
         batch = processor(image, return_tensors="pt")["pixel_values"].to(next(model.parameters()).device)
-        result = torch.softmax(model(pixel_values=batch).logits, dim=-1)
+        with torch.no_grad():
+            result = torch.softmax(model(pixel_values=batch).logits, dim=-1)
         target = result.argmax(dim=-1)
         labels.append(LABEL_TO_INDEX[row.dx])
         predicted.append(int(target[0]))
