@@ -7,6 +7,7 @@ from sklearn.metrics import (
     f1_score,
     roc_auc_score,
 )
+from sklearn.preprocessing import label_binarize
 
 
 def expected_calibration_error(probas: np.ndarray, labels: np.ndarray, bins: int = 10) -> float:
@@ -36,10 +37,11 @@ def classification_metrics(labels, predicted, probas, bins: int = 10) -> dict:
         "ece": expected_calibration_error(probas, labels, bins),
     }
     try:
-        result["roc_auc"] = float(
-            roc_auc_score(labels, probas, multi_class="ovr", average="macro", labels=list(range(probas.shape[1])))
-        )
-        result["pr_auc"] = float(average_precision_score(labels, probas, average="macro"))
+        binarized = label_binarize(labels, classes=list(range(probas.shape[1]))).astype(float)
+        present = [index for index in range(probas.shape[1]) if binarized[:, index].any()]
+        result["roc_auc"] = float(roc_auc_score(binarized[:, present], probas[:, present], average="macro"))
+        result["pr_auc"] = float(average_precision_score(binarized[:, present], probas[:, present], average="macro"))
+        result["ranking_classes"] = len(present)
     except ValueError as exc:
         result["roc_auc"] = None
         result["pr_auc"] = None
