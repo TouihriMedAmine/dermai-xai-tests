@@ -47,6 +47,24 @@ data/
 
 Reported metrics: test-split lesion-grouped classification (balanced accuracy, macro F1, OVR ROC-AUC, PR-AUC, ECE), deletion/insertion AUC with Grad-CAM saliency, IoU and pointing-game hit rate against Tschandl masks at the model input resolution.
 
+## Reference run (RTX 4060, 2026-10-22)
+
+One full 1002-image lesion-grouped split with local code, mask pairing and Grad-CAM at 224x224:
+
+| Metric | 1002-image split | 200-image subset |
+|---|---:|---:|
+| Balanced accuracy | 0.949 | 0.960 |
+| Macro F1 | 0.928 | 0.944 |
+| ECE | 0.017 | 0.031 |
+| ROC-AUC (OVR macro) | 0.996 | 0.996 |
+| PR-AUC (macro) | 0.984 | 0.982 |
+| IoU (15% positive fraction) | 0.467 +- 0.179 | 0.490 +- 0.181 |
+| Pointing game hit rate | 0.971 | 0.980 |
+| Deletion AUC (zeros baseline, lower=better) | 0.691 | 0.690 |
+| Insertion AUC (mean baseline, higher=better) | 0.632 | 0.629 |
+
+Note: the split here is a StratifiedGroupKFold(10, seed 0) fold, not the authors' holdout, so classification numbers may include images the authors used for training. Faithfulness numbers differ from the authors' report (macro deletion 0.174 / insertion 0.203) because that protocol uses a blur baseline and per-ground-truth-class curves, while ours uses an argmax target with a zeros baseline.
+
 ## Licences and data
 
 - Code in this repository: MIT.
