@@ -26,7 +26,7 @@ def load_frame(data_dir: Path) -> tuple[pd.DataFrame, dict[str, Path]]:
     metadata_path = data_dir / "HAM10000_metadata.csv"
     if not metadata_path.is_file():
         metadata_path = data_dir / "HAM10000_metadata"
-    frame = pd.read_csv(metadata_path)
+    frame = pd.read_csv(metadata_path, sep=None, engine="python")
     mapping: dict[str, Path] = {}
     for name in ("HAM10000_images_part_1", "HAM10000_images_part_2"):
         image_dir = data_dir / name
