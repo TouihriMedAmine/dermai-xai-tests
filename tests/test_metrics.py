@@ -46,7 +46,7 @@ def test_classification_metrics_imperfect_predictions():
     predicted = probas.argmax(axis=1)
     labels = rng.randint(0, 3, size=30)
     report = classification_metrics(labels, predicted, probas)
-    assert set(report) == {"balanced_accuracy", "macro_f1", "roc_auc", "pr_auc", "ece"}
+    assert set(report) == {"balanced_accuracy", "macro_f1", "roc_auc", "pr_auc", "ece", "ranking_classes"}
     assert 0.0 <= report["balanced_accuracy"] <= 1.0
     assert 0.0 <= report["macro_f1"] <= 1.0
     assert report["roc_auc"] is None or 0.0 <= report["roc_auc"] <= 1.0
