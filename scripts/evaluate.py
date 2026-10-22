@@ -20,12 +20,16 @@ LABEL_TO_INDEX = {name: index for index, name in enumerate(HAM10000_CLASSES)}
 
 
 def load_frame(data_dir: Path) -> tuple[pd.DataFrame, dict[str, Path]]:
-    frame = pd.read_csv(data_dir / "HAM10000_metadata.csv")
+    metadata_path = data_dir / "HAM10000_metadata.csv"
+    if not metadata_path.is_file():
+        metadata_path = data_dir / "HAM10000_metadata"
+    frame = pd.read_csv(metadata_path)
     mapping: dict[str, Path] = {}
     for name in ("HAM10000_images_part_1", "HAM10000_images_part_2"):
         image_dir = data_dir / name
         if image_dir.is_dir():
             mapping.update({path.stem: path for path in image_dir.glob("*.jpg")})
+    mapping.update({path.stem: path for path in data_dir.glob("*.jpg")})
     frame = frame[frame.image_id.isin(mapping)].reset_index(drop=True)
     return frame, mapping
 
