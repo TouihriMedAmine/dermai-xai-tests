@@ -40,7 +40,8 @@ def classification_metrics(labels, predicted, probas, bins: int = 10) -> dict:
             roc_auc_score(labels, probas, multi_class="ovr", average="macro", labels=list(range(probas.shape[1])))
         )
         result["pr_auc"] = float(average_precision_score(labels, probas, average="macro"))
-    except ValueError:
+    except ValueError as exc:
         result["roc_auc"] = None
         result["pr_auc"] = None
+        result["ranking_metric_error"] = str(exc)
     return result
